@@ -1,0 +1,30 @@
+{
+    "name": "yii2tech/crontab",
+    "description": "Crontab support extension for the Yii2 framework",
+    "keywords": ["yii2", "crontab", "cronjob", "cron"],
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yii2tech/crontab/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "https://github.com/yii2tech/crontab/wiki",
+        "source": "https://github.com/yii2tech/crontab"
+    },
+    "authors": [
+        {
+            "name": "Paul Klimov",
+            "email": "klimov.paul@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": { "yii2tech\\crontab\\": "" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
