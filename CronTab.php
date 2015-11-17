@@ -151,7 +151,7 @@ class CronTab extends Component
         if (!file_exists($filename)) {
             throw new InvalidParamException("File '{$filename}' does not exist.");
         }
-        $command = $this->binPath . ' < ' .$filename;
+        $command = $this->binPath . ' < ' . escapeshellarg($filename);
         exec($command, $outputLines);
         return $this;
     }
