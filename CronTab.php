@@ -151,9 +151,28 @@ class CronTab extends Component
         if (!file_exists($filename)) {
             throw new InvalidParamException("File '{$filename}' does not exist.");
         }
+
+        $filename = $this->shortPathName($filename);
+        
         $command = $this->binPath . ' ' . escapeshellarg($filename);
         exec($command, $outputLines);
         return $this;
+    }
+
+    /**
+     * Create new file with full path less than 100 characters
+     * @param string $fileName file name
+     * @return string path name with characters less than 100
+     */
+    protected function shortPathName($fileName){
+        if(strlen($fileName) < 99){
+            return $fileName;
+        }
+
+        $newFileName = tempnam(sys_get_temp_dir(), 'tmp');        
+        file_put_contents($newFileName, file_get_contents($fileName));
+
+        return $newFileName;
     }
 
     /**
