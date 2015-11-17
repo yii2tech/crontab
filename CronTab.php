@@ -160,9 +160,9 @@ class CronTab extends Component
     }
 
     /**
-     * Create new file with full path less than 100 characters
+     * Create new file with full path less than 99 characters
      * @param string $fileName file name
-     * @return string path name with characters less than 100
+     * @return string path name with characters less than 99
      */
     protected function shortPathName($fileName){
         if(strlen($fileName) < 99){
