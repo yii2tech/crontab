@@ -286,4 +286,34 @@ class CronTabTest extends TestCase
         $this->assertNotContains($firstJob['command'], $cronTabContent, 'Removed job present!');
         $this->assertContains($secondJob['command'], $cronTabContent, 'Remaining job not present!');
     }
+
+    /**
+     * @depends testSaveToFile
+     */
+    public function testApplyFile()
+    {
+        $cronTab = new CronTab();
+
+        $jobs = [
+            [
+                'command' => 'command/line/1',
+            ],
+            [
+                'command' => 'command/line/2',
+            ],
+        ];
+        $cronTab->setJobs($jobs);
+
+        $filename = $this->getTestFilePath() . DIRECTORY_SEPARATOR . 'testfile.tmp';
+
+        $cronTab->saveToFile($filename);
+
+        $cronTab->applyFile($filename);
+
+        $cronTab = new CronTab();
+        $currentLines = $cronTab->getCurrentLines();
+        $cronTabContent = implode("\n", $currentLines);
+        $this->assertContains($jobs[0]['command'], $cronTabContent);
+        $this->assertContains($jobs[1]['command'], $cronTabContent);
+    }
 } 
