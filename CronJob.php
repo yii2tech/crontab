@@ -24,7 +24,7 @@ use yii\base\Model;
  * $cronJob = new CronJob();
  * $cronJob->min = '0';
  * $cronJob->hour = '0';
- * $cronJob->command = 'my/shell/command';
+ * $cronJob->command = 'my-shell-command';
  * echo $cronJob->getLine();
  * ```
  *
@@ -34,7 +34,7 @@ use yii\base\Model;
  * use yii2tech\crontab\CronJob;
  *
  * $cronJob = new CronJob();
- * $cronTabLine = '0 0 * * * my/shell/command';
+ * $cronTabLine = '0 0 * * * my-shell-command';
  * $cronJob->setLine($cronTabLine);
  * echo $cronJob->command;
  * ```

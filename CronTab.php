@@ -116,7 +116,7 @@ class CronTab extends Component
     }
 
     /**
-     * Returns the crontab lines composed from {@link jobs}.
+     * Returns the crontab lines composed from [[jobs]].
      * @return array crontab lines.
      */
     public function getLines()
@@ -214,7 +214,7 @@ class CronTab extends Component
     }
 
     /**
-     * Removes current {@link jobs} from the current user crontab.
+     * Removes current [[jobs]] from the current user crontab.
      * @return static self reference.
      */
     public function remove()
