@@ -59,6 +59,12 @@ class CronTab extends Component
         'class' => 'yii2tech\crontab\CronJob'
     ];
     /**
+     * @var string|callable filter, which indicates whether existing cron job should be removed on cron tab merging.
+     * Value could be a plain string, which presence in the cron job line indicates it should be removed, or a callable
+     * of following signature: `boolean function (string $line)`, which shoult return `true` if line should be removed.
+     */
+    public $mergeFilter;
+    /**
      * @var CronJob[]|array[] list of [[CronJob]] instances or their array configurations.
      */
     private $_jobs = [];
@@ -236,22 +242,34 @@ class CronTab extends Component
     }
 
     /**
-     * Merges given crontab lines.
-     * @param array $a lines to be merged to
-     * @param array $b lines to be merged from. You can specify additional
-     * arrays via third argument, fourth argument etc.
+     * Merges existing crontab lines with new ones, applying [[mergeFilter]].
+     * @param array $currentLines lines to be merged to
+     * @param array $newLines lines to be merged from.
      * @return array merged lines
      */
-    protected function mergeLines($a, $b)
+    protected function mergeLines($currentLines, $newLines)
     {
-        $args = func_get_args();
-        $result = array_shift($args);
-        while (!empty($args)) {
-            $next = array_shift($args);
-            foreach ($next as $value) {
-                if (!in_array($value, $result)) {
-                    $result[] = $value;
+        if ($this->mergeFilter === null) {
+            $result = $currentLines;
+        } else {
+            $result = [];
+            foreach ($currentLines as $line) {
+                if (is_string($this->mergeFilter)) {
+                    if (strpos($line, $this->mergeFilter) !== false) {
+                        continue;
+                    }
+                } else {
+                    if (call_user_func($this->mergeFilter, $line)) {
+                        continue;
+                    }
                 }
+                $result[] = $line;
+            }
+        }
+
+        foreach ($newLines as $line) {
+            if (!in_array($line, $result)) {
+                $result[] = $line;
             }
         }
         return $result;

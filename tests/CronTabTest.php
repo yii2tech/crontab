@@ -217,6 +217,64 @@ class CronTabTest extends TestCase
     /**
      * @depends testMerge
      */
+    public function testMergeFilter()
+    {
+        $cronTab = new CronTab();
+
+        $filterJob = [
+            'min' => '0',
+            'hour' => '0',
+            'command' => 'whoami',
+        ];
+
+        $firstJob = [
+            'min' => '0',
+            'hour' => '0',
+            'command' => 'pwd',
+        ];
+        $cronTab->setJobs([$filterJob, $firstJob]);
+        $cronTab->apply();
+
+        $secondJob = [
+            'min' => '0',
+            'hour' => '0',
+            'command' => 'ls',
+        ];
+        $cronTab->setJobs([$secondJob]);
+        $cronTab->mergeFilter = $filterJob['command'];
+        $cronTab->apply();
+
+        $currentLines = $cronTab->getCurrentLines();
+        $cronTabContent = implode("\n", $currentLines);
+        $this->assertNotContains($filterJob['command'], $cronTabContent, 'Filtered job present!');
+        $this->assertContains($firstJob['command'], $cronTabContent, 'Not filtered job not present!');
+        $this->assertContains($secondJob['command'], $cronTabContent, 'New job not present!');
+
+        $cronTab->mergeFilter = null;
+        $cronTab->setJobs([$filterJob]);
+        $cronTab->apply();
+
+        $thirdJob = [
+            'min' => '0',
+            'hour' => '0',
+            'command' => 'cd ~',
+        ];
+        $cronTab->setJobs([$thirdJob]);
+        $cronTab->mergeFilter = function ($line) use ($filterJob) {
+            return (strpos($line, $filterJob['command']) !== false);
+        };
+        $cronTab->apply();
+
+        $currentLines = $cronTab->getCurrentLines();
+        $cronTabContent = implode("\n", $currentLines);
+        $this->assertNotContains($filterJob['command'], $cronTabContent, 'Filtered job present!');
+        $this->assertContains($firstJob['command'], $cronTabContent, 'Not filtered job not present!');
+        $this->assertContains($thirdJob['command'], $cronTabContent, 'New job not present!');
+    }
+
+    /**
+     * @depends testMerge
+     */
     public function testApplyTwice()
     {
         $cronTab = new CronTab();
