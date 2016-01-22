@@ -399,4 +399,4 @@ class CronTabTest extends TestCase
             $this->assertEquals($e->getMessage(), 'Failure to setup cron jobs.', 'Failed to exception when fail setup cron jobs!');
         }
     }
-} 
+}
