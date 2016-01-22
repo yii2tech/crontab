@@ -376,27 +376,16 @@ class CronTabTest extends TestCase
     }
 
     /**
-     * @depends testApplyFile()
+     * @depends testApplyFile
      */
     public function testFailApplyFile()
     {
+        $filename = $this->getTestFilePath() . DIRECTORY_SEPARATOR . 'testfile.tmp';
+        file_put_contents($filename, '* 2 * * * * ls --help');
+
         $cronTab = new CronTab();
 
-        $jobs = [
-            [
-                'line' => '* 2 * * * * ls --help',
-            ],
-        ];
-        $cronTab->setJobs($jobs);
-
-        $filename = $this->getTestFilePath() . DIRECTORY_SEPARATOR . 'testfile.tmp';
-
-        $cronTab->saveToFile($filename);
-
-        try {
-            $cronTab->applyFile($filename);
-        } catch (Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Failure to setup cron jobs.', 'Failed to exception when fail setup cron jobs!');
-        }
+        $this->setExpectedException('yii\base\Exception', 'Failure to setup crontab from file');
+        $cronTab->applyFile($filename);
     }
-} 
+}
