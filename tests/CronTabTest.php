@@ -374,4 +374,29 @@ class CronTabTest extends TestCase
         $this->assertContains($jobs[0]['command'], $cronTabContent);
         $this->assertContains($jobs[1]['command'], $cronTabContent);
     }
-} 
+
+    /**
+     * @depends testApplyFile()
+     */
+    public function testFailApplyFile()
+    {
+        $cronTab = new CronTab();
+
+        $jobs = [
+            [
+                'line' => '* 2 * * * * ls --help',
+            ],
+        ];
+        $cronTab->setJobs($jobs);
+
+        $filename = $this->getTestFilePath() . DIRECTORY_SEPARATOR . 'testfile.tmp';
+
+        $cronTab->saveToFile($filename);
+
+        try {
+            $cronTab->applyFile($filename);
+        } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Failure to setup cron jobs.', 'Failed to exception when fail setup cron jobs!');
+        }
+    }
+}
