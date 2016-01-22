@@ -14,10 +14,6 @@
         {
             "name": "Paul Klimov",
             "email": "klimov.paul@gmail.com"
-        },
-        {
-            "name": "Pavel Chernoskutov",
-            "email": "pavel-ekt@yandex.ru"
         }
     ],
     "require": {
