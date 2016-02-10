@@ -1,8 +1,8 @@
 Yii 2 Crontab extension Change Log
 ==================================
 
-1.0.1 under development
------------------------
+1.0.1, February 10, 2016
+------------------------
 
 - Enh #3: `CronTab::applyFile()` now throws an exception on `crontab` command failure (PaVeL-Ekt)
 
