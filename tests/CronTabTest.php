@@ -388,4 +388,23 @@ class CronTabTest extends TestCase
         $this->setExpectedException('yii\base\Exception', 'Failure to setup crontab from file');
         $cronTab->applyFile($filename);
     }
+
+    /**
+     * @see https://github.com/yii2tech/crontab/issues/6
+     *
+     * @depends testSaveToFile
+     */
+    public function testSaveEmptyLines()
+    {
+        $cronTab = new CronTab();
+
+        $cronTab->setJobs([]);
+
+        $filename = $this->getTestFilePath() . DIRECTORY_SEPARATOR . 'testfile.tmp';
+
+        $cronTab->saveToFile($filename);
+
+        $fileContent = file_get_contents($filename);
+        $this->assertEmpty($fileContent);
+    }
 }

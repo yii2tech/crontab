@@ -185,6 +185,9 @@ class CronTab extends Component
      */
     protected function composeFileContent(array $lines)
     {
+        if (empty($lines)) {
+            return '';
+        }
         return implode("\n", $lines) . "\n";
     }
 
