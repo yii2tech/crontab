@@ -407,4 +407,37 @@ class CronTabTest extends TestCase
         $fileContent = file_get_contents($filename);
         $this->assertEmpty($fileContent);
     }
+
+    /**
+     * @depends testSaveToFile
+     */
+    public function testHeadLines()
+    {
+        $cronTab = new CronTab();
+
+        $cronTab->headLines = [
+            '#test head line',
+            'SHELL=/bin/sh',
+        ];
+        $cronTab->setJobs([
+            [
+                'command' => 'command/line/1',
+            ],
+        ]);
+
+        $filename = $this->getTestFilePath() . DIRECTORY_SEPARATOR . 'testfile.tmp';
+        $cronTab->saveToFile($filename);
+
+        $expectedFileContent = <<<CRONTAB
+#test head line
+SHELL=/bin/sh
+
+* * * * * command/line/1
+
+CRONTAB;
+
+        $fileContent = file_get_contents($filename);
+
+        $this->assertEquals($expectedFileContent, $fileContent);
+    }
 }

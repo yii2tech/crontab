@@ -61,9 +61,25 @@ class CronTab extends Component
     /**
      * @var string|callable filter, which indicates whether existing cron job should be removed on cron tab merging.
      * Value could be a plain string, which presence in the cron job line indicates it should be removed, or a callable
-     * of following signature: `boolean function (string $line)`, which shoult return `true` if line should be removed.
+     * of following signature: `boolean function (string $line)`, which should return `true`, if line should be removed.
      */
     public $mergeFilter;
+    /**
+     * @var array list of lines, which should be added at the beginning of the crontab.
+     * You can put comment lines and shell configuration here.
+     *
+     * For example:
+     *
+     * ```php
+     * [
+     *     '# crontab created by my application',
+     *     'SHELL=/bin/sh',
+     *     'PATH=/usr/bin:/usr/sbin',
+     * ]
+     * ```
+     */
+    public $headLines = [];
+
     /**
      * @var CronJob[]|array[] list of [[CronJob]] instances or their array configurations.
      */
@@ -121,7 +137,13 @@ class CronTab extends Component
      */
     public function getLines()
     {
-        $lines = [];
+        if (empty($this->headLines)) {
+            $lines = [];
+        } else {
+            $lines = $this->headLines;
+            $lines[] = '';
+        }
+
         foreach ($this->getJobs() as $job) {
             $lines[] = $this->composeJobLine($job);
         }

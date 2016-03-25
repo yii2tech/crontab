@@ -4,6 +4,7 @@ Yii 2 Crontab extension Change Log
 1.0.2 under development
 -----------------------
 
+- Enh #7: Added `CronTab::headLines`, allowing setup shell configuration at the crontab beginning (klimov-paul)
 - Enh #6: In case there is not cron jobs to be saved `CronTab` no longer puts new line separator in result file (klimov-paul)
 
 

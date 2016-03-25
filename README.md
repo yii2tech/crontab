@@ -201,3 +201,40 @@ will produce following crontab:
 ```
 15 2 * * * php /path/to/my/project/yii some-cron
 ```
+
+
+## Extra lines setup <span id="extra-lines-setup"></span>
+
+Crontab file may content additional lines beside jobs specifications. It may contain comments or extra
+shell configuration. For example:
+
+```
+# this crontab created by my application
+SHELL=/bin/sh
+PATH=/usr/bin:/usr/sbin
+
+0 0 * * * php /path/to/my/project/yii some-cron
+```
+
+You may append such extra lines into the crontab using [[yii2tech\crontab\CronTab::headLines]]. For example:
+
+```php
+use yii2tech\crontab\CronTab;
+
+$cronTab = new CronTab();
+$cronTab->headLines = [
+    '# this crontab created by my application',
+    'SHELL=/bin/sh',
+    'PATH=/usr/bin:/usr/sbin',
+];
+$cronTab->setJobs([
+    [
+        'min' => '0',
+        'hour' => '0',
+        'command' => 'php /path/to/project/yii some-cron',
+    ],
+]);
+$cronTab->apply();
+```
+
+> Note: usage of the `headLines` may produce unexpected results, while merging crontab with existing one.
