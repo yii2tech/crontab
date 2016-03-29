@@ -151,21 +151,25 @@ class CronTab extends Component
     }
 
     /**
-     * Returns current cron jobs setup in the system fro current user.
+     * Returns current cron jobs setup in the system for current user.
      * @return array cron job lines.
+     * @throws Exception on failure.
      */
     public function getCurrentLines()
     {
         $command = $this->binPath . ' -l 2>&1';
         $outputLines = [];
-        exec($command, $outputLines);
-        $lines = [];
-        foreach ($outputLines as $outputLine) {
-            if (stripos($outputLine, 'no crontab') !== 0) {
-                $lines[] = trim($outputLine);
+        exec($command, $outputLines, $exitCode);
+
+        if ($exitCode !== 0) {
+            $output = implode("\n", $outputLines);
+            if (stripos($output, 'no crontab') === false) {
+                throw new Exception('Unable to read crontab: ' . $output);
             }
+            return [];
         }
-        return $lines;
+
+        return array_map('trim', $outputLines);
     }
 
     /**
