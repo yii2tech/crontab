@@ -161,7 +161,7 @@ class CronTab extends Component
         exec($command, $outputLines);
         $lines = [];
         foreach ($outputLines as $outputLine) {
-            if (stripos($outputLine, 'no crontab') === 0) {
+            if (stripos($outputLine, 'no crontab') === false) {
                 $lines[] = trim($outputLine);
             }
         }
