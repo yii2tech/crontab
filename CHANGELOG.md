@@ -1,8 +1,8 @@
 Yii 2 Crontab extension Change Log
 ==================================
 
-1.0.2 under development
------------------------
+1.0.2, April 25, 2016
+---------------------
 
 - Bug #10: Fixed `CronTab::getCurrentLines()` unable to recognize empty crontab at some operation systems (klimov-paul)
 - Enh #7: Added `CronTab::headLines`, allowing setup shell configuration at the crontab beginning (klimov-paul)
