@@ -185,7 +185,7 @@ running following code:
 use yii2tech\crontab\CronTab;
 
 $cronTab = new CronTab();
-$cronTab->filter = '/path/to/project/yii'; // filter all invocation of Yii console
+$cronTab->mergeFilter = '/path/to/project/yii'; // filter all invocation of Yii console
 $cronTab->setJobs([
     [
         'min' => '15',
