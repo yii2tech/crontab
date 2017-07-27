@@ -92,7 +92,7 @@ class CronJob extends Model
 
     /**
      * Returns formatted cron tab line composed from internal attributes
-     * @param boolean $runValidation whether to run validation before composing line.
+     * @param bool $runValidation whether to run validation before composing line.
      * @throws InvalidConfigException on failure.
      * @return string cron tab line.
      */

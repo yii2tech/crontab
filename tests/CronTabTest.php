@@ -385,7 +385,8 @@ class CronTabTest extends TestCase
 
         $cronTab = new CronTab();
 
-        $this->setExpectedException('yii\base\Exception', 'Failure to setup crontab from file');
+        $this->expectException('yii\base\Exception');
+        $this->expectExceptionMessage('Failure to setup crontab from file');
         $cronTab->applyFile($filename);
     }
 

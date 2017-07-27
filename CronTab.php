@@ -61,7 +61,7 @@ class CronTab extends Component
     /**
      * @var string|callable filter, which indicates whether existing cron job should be removed on cron tab merging.
      * Value could be a plain string, which presence in the cron job line indicates it should be removed, or a callable
-     * of following signature: `boolean function (string $line)`, which should return `true`, if line should be removed.
+     * of following signature: `bool function (string $line)`, which should return `true`, if line should be removed.
      */
     public $mergeFilter;
     /**
@@ -195,7 +195,7 @@ class CronTab extends Component
     /**
      * Saves the current jobs into the text file.
      * @param string $fileName output file name.
-     * @return integer number of written bytes.
+     * @return int number of written bytes.
      */
     public function saveToFile($fileName)
     {

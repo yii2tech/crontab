@@ -68,7 +68,7 @@ class CronJobTest extends TestCase
      * @dataProvider dataProviderValidate
      *
      * @param array $attributes
-     * @param boolean $isValid
+     * @param bool $isValid
      */
     public function testValidate(array $attributes, $isValid)
     {

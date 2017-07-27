@@ -1,5 +1,10 @@
-Crontab Extension for Yii 2
-===========================
+<p align="center">
+    <a href="https://github.com/yii2tech" target="_blank">
+        <img src="https://avatars2.githubusercontent.com/u/12951949" height="100px">
+    </a>
+    <h1 align="center">Crontab Extension for Yii 2</h1>
+    <br>
+</p>
 
 This extension adds [Crontab](http://en.wikipedia.org/wiki/Crontab) setup support.
 
@@ -169,10 +174,10 @@ will produce following crontab:
 15 2 * * * php /path/to/my/project/yii some-cron
 ```
 
-You may interfere in merging process using [[yii2tech\crontab\CronTab::mergeFilter]], which allows indicating
+You may interfere in merging process using [[yii2tech\crontab\CronTab::$mergeFilter]], which allows indicating
 those existing cron jobs, which should be removed while merging. Its value could be a plain string - in this case
 all lines, which contains this string as a substring will be removed, or a PHP callable of the following signature:
-`boolean function (string $line)` - if function returns `true` the line should be removed.
+`bool function (string $line)` - if function returns `true` the line should be removed.
 For example, if current crontab is following:
 
 ```
@@ -216,7 +221,7 @@ PATH=/usr/bin:/usr/sbin
 0 0 * * * php /path/to/my/project/yii some-cron
 ```
 
-You may append such extra lines into the crontab using [[yii2tech\crontab\CronTab::headLines]]. For example:
+You may append such extra lines into the crontab using [[yii2tech\crontab\CronTab::$headLines]]. For example:
 
 ```php
 use yii2tech\crontab\CronTab;
