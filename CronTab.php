@@ -42,6 +42,8 @@ use yii\base\InvalidParamException;
  * @see CronJob
  * @see http://en.wikipedia.org/wiki/Crontab
  *
+ * @property CronJob[]|array[] $jobs list of [[CronJob]] instances or their array configurations.
+ *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
  */
@@ -77,6 +79,8 @@ class CronTab extends Component
      *     'PATH=/usr/bin:/usr/sbin',
      * ]
      * ```
+     *
+     * @since 1.0.2
      */
     public $headLines = [];
 
@@ -87,7 +91,7 @@ class CronTab extends Component
 
 
     /**
-     * @param array $jobs
+     * @param CronJob[]|array[] $jobs list of [[CronJob]] instances or their array configurations.
      * @return static self reference
      */
     public function setJobs($jobs)
@@ -97,7 +101,7 @@ class CronTab extends Component
     }
 
     /**
-     * @return array
+     * @return CronJob[]|array[] list of [[CronJob]] instances or their array configurations.
      */
     public function getJobs()
     {
