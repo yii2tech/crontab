@@ -19,6 +19,12 @@
     "require": {
         "yiisoft/yii2": "*"
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
     "autoload": {
         "psr-4": { "yii2tech\\crontab\\": "" }
     },
