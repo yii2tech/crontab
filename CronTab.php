@@ -83,6 +83,13 @@ class CronTab extends Component
      * @since 1.0.2
      */
     public $headLines = [];
+    /**
+     * @var string the name of the user whose crontab is to be affected.
+     * If set it will be applied to 'crontab' command via '-u' option.
+     * Note: this option will work only in case PHP script is running from privileged user (e.g. 'root').
+     * @since 1.0.3
+     */
+    public $username;
 
     /**
      * @var CronJob[]|array[] list of [[CronJob]] instances or their array configurations.
@@ -161,7 +168,7 @@ class CronTab extends Component
      */
     public function getCurrentLines()
     {
-        $command = $this->binPath . ' -l 2>&1';
+        $command = $this->composeBaseCommand() . ' -l 2>&1';
         $outputLines = [];
         exec($command, $outputLines, $exitCode);
 
@@ -188,7 +195,7 @@ class CronTab extends Component
         if (!file_exists($filename)) {
             throw new InvalidParamException("File '{$filename}' does not exist.");
         }
-        $command = $this->binPath . ' < ' . escapeshellarg($filename) . ' 2>&1';
+        $command = $this->composeBaseCommand() . ' < ' . escapeshellarg($filename) . ' 2>&1';
         exec($command, $outputLines, $exitCode);
         if ($exitCode !== 0) {
             throw new Exception("Failure to setup crontab from file '{$filename}': " . implode("\n", $outputLines));
@@ -273,7 +280,7 @@ class CronTab extends Component
      */
     public function removeAll()
     {
-        $command = $this->binPath . ' -r 2>&1';
+        $command = $this->composeBaseCommand() . ' -r 2>&1';
         exec($command);
         return $this;
     }
@@ -310,5 +317,19 @@ class CronTab extends Component
             }
         }
         return $result;
+    }
+
+    /**
+     * Composes base (beginning part) 'crontab' shell command string.
+     * @return string base shell command string.
+     * @since 1.0.3
+     */
+    protected function composeBaseCommand()
+    {
+        $command = $this->binPath;
+        if ($this->username !== null) {
+            $command .= ' -u ' . escapeshellarg($this->username);
+        }
+        return $command;
     }
 }

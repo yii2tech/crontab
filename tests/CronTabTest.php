@@ -441,4 +441,38 @@ CRONTAB;
 
         $this->assertEquals($expectedFileContent, $fileContent);
     }
+
+    /**
+     * @depends testRemoveAll
+     */
+    public function testUsername()
+    {
+        $username = exec('whoami');
+
+        if ($username !== 'root') {
+            $this->markTestSkipped('This test can be run only by privileged user.');
+        }
+
+        $cronTab = new CronTab();
+        $cronTab->username = $username;
+
+        $jobs = [
+            [
+                'min' => '0',
+                'hour' => '0',
+                'command' => 'pwd',
+            ],
+        ];
+        $cronTab->setJobs($jobs);
+
+        $cronTab->apply();
+
+        $currentLines = $cronTab->getCurrentLines();
+        $this->assertNotEmpty($currentLines, 'Unable to setup crontab for user.');
+
+        $cronTab->removeAll();
+
+        $currentLines = $cronTab->getCurrentLines();
+        $this->assertEmpty($currentLines, 'Unable to remove cron jobs for user!');
+    }
 }

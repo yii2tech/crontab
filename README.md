@@ -243,3 +243,31 @@ $cronTab->apply();
 ```
 
 > Note: usage of the `headLines` may produce unexpected results, while merging crontab with existing one.
+
+
+## User setup <span id="user-setup"></span>
+
+Each Linux system user has his own crontab. Ownership of crontab affected by this extension is determined by the user
+running the PHP script. For the web application it is usually 'apache', for the console application - current local user
+or root. Thus crontab application from web application and from console application will produce 2 separated cron jobs list
+for 2 different system users.
+
+You may explicitly setup name of the user whose crontab is to be affected via [[yii2tech\crontab\CronTab::$username]].
+For example:
+
+```php
+use yii2tech\crontab\CronTab;
+
+$cronTab = new CronTab();
+$cronTab->username = 'www-data'; // apply crontab for 'www-data' user
+$cronTab->setJobs([
+    [
+        'min' => '0',
+        'hour' => '0',
+        'command' => 'php /path/to/project/yii some-cron',
+    ],
+]);
+$cronTab->apply();
+```
+
+However, this will work only in case PHP script is running from privileged user (e.g. 'root').

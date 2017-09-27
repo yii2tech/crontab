@@ -1,6 +1,12 @@
 Yii 2 Crontab extension Change Log
 ==================================
 
+1.0.3 under development
+-----------------------
+
+- Enh #16: Added `CronTab::$username`, allowing setup the name of the user whose crontab is to be affected (klimov-paul)
+
+
 1.0.2, April 25, 2016
 ---------------------
 
