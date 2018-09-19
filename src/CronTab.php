@@ -11,7 +11,7 @@ use Yii;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
-use yii\base\InvalidParamException;
+use yii\base\InvalidArgumentException;
 
 /**
  * CronTab allows management of the cron jobs.
@@ -187,13 +187,13 @@ class CronTab extends Component
      * Setup the cron jobs from given file.
      * @param string $filename file name.
      * @return static self reference.
-     * @throws InvalidParamException on failure.
+     * @throws InvalidArgumentException on failure.
      * @throws Exception on failure to setup crontab.
      */
     public function applyFile($filename)
     {
         if (!file_exists($filename)) {
-            throw new InvalidParamException("File '{$filename}' does not exist.");
+            throw new InvalidArgumentException("File '{$filename}' does not exist.");
         }
         $command = $this->composeBaseCommand() . ' < ' . escapeshellarg($filename) . ' 2>&1';
         exec($command, $outputLines, $exitCode);

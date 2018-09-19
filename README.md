@@ -143,7 +143,7 @@ will produce following crontab:
 ```
 
 While merging crontab lines [[yii2tech\crontab\CronTab::apply()]] avoids duplication, so same cron job will never
-be added twice. However while doing this, lines are compared by *exact* match, inlcuding command and time pattern.
+be added twice. However while doing this, lines are compared by **exact** match, inlcuding command and time pattern.
 If same command added twice with different time pattern - 2 crontab records will be present.
 For example, if current crontab is following:
 

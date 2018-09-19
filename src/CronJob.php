@@ -8,7 +8,7 @@
 namespace yii2tech\crontab;
 
 use yii\base\InvalidConfigException;
-use yii\base\InvalidParamException;
+use yii\base\InvalidArgumentException;
 use yii\base\Model;
 
 /**
@@ -176,7 +176,7 @@ class CronJob extends Model
      * Note: optional 'year' parameter will not be parsed and will be considered as
      * a part of command!
      * @param string $line formatted cron tab line.
-     * @throws InvalidParamException on invalid line format.
+     * @throws InvalidArgumentException on invalid line format.
      */
     protected function parseLine($line)
     {
@@ -184,7 +184,7 @@ class CronJob extends Model
         $partsCount = 6;
         $parts = explode(' ', $line, $partsCount);
         if (count($parts) < $partsCount) {
-            throw new InvalidParamException('Cron job line "' . $line . '" invalid.');
+            throw new InvalidArgumentException('Cron job line "' . $line . '" invalid.');
         }
         $this->command = array_pop($parts);
         $this->min = array_shift($parts);
