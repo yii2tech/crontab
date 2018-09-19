@@ -26,7 +26,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "yii2tech\\crontab\\": "" }
+        "psr-4": {"yii2tech\\crontab\\": "src"}
     },
     "extra": {
         "branch-alias": {
