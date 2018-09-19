@@ -1,8 +1,8 @@
 Yii 2 Crontab extension Change Log
 ==================================
 
-1.0.4 under development
------------------------
+1.0.4, September 19, 2018
+-------------------------
 
 - Enh: Usage of deprecated `yii\base\InvalidParamException` changed to `yii\base\InvalidArgumentException` one (klimov-paul)
 
