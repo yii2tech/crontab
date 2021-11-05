@@ -1,0 +1,15 @@
+FROM php:7.4-cli-buster
+
+RUN apt-get update
+RUN apt-get upgrade -yqq
+
+RUN apt-get install -yqq cron
+
+# composer
+RUN apt-get install -yqq git
+RUN curl -sS https://getcomposer.org/installer | php -- --2 --install-dir=/usr/local/bin --filename=composer
+
+# clean
+RUN apt-get clean
+RUN apt-get autoremove -yqq
+RUN rm -rf /var/lib/apt/lists/*

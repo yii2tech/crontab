@@ -19,6 +19,10 @@
     "require": {
         "yiisoft/yii2": "~2.0.14"
     },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "phpunit/phpunit": "7.5.*"
+    },
     "repositories": [
         {
             "type": "composer",

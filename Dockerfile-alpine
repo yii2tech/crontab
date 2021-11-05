@@ -1,0 +1,12 @@
+FROM php:7.4-cli-alpine
+
+# composer
+RUN apk add --no-cache git
+RUN wget https://getcomposer.org/installer -O - | php -- --2 --install-dir=/usr/local/bin --filename=composer
+
+# for crontab
+RUN apk add --no-cache busybox-suid
+
+# clean
+RUN rm -rf /var/cache/apk/*
+RUN rm -rf /tmp/*

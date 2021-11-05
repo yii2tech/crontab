@@ -15,6 +15,7 @@ Thumbs.db
 # composer vendor dir
 /vendor
 
+/.composer
 /composer.lock
 
 # composer itself is not needed

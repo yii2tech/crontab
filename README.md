@@ -271,3 +271,15 @@ $cronTab->apply();
 ```
 
 However, this will work only in case PHP script is running from privileged user (e.g. 'root').
+
+## Testing
+
+```
+~$ docker build -f Dockerfile-alpine --pull --force-rm --no-cache -t php7-alpine .
+~$ docker run --rm -it -v $(pwd):/var/www -w /var/www php7-alpine composer update --prefer-dist
+~$ docker run --rm -it -v $(pwd):/var/www -w /var/www php7-alpine vendor/bin/phpunit
+
+~$ docker build -f Dockerfile-debian --pull --force-rm --no-cache -t php7-debian .
+~$ docker run --rm -it -v $(pwd):/var/www -w /var/www php7-debian composer update --prefer-dist
+~$ docker run --rm -it -v $(pwd):/var/www -w /var/www php7-debian vendor/bin/phpunit
+```
