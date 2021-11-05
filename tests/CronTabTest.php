@@ -495,6 +495,7 @@ CRONTAB;
         $cronTab = new CronTab();
         $os = $this->getOs();
         if ($os === 'alpine') {
+            $cronTab->commandApplyFile = '{crontab} {user} {file}';
             $cronTab->commandRemoveAll = 'echo | {crontab} {user} -';
         }
         if ($os === 'debian') {
