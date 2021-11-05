@@ -90,6 +90,12 @@ class CronTab extends Component
      * @since 1.0.3
      */
     public $username;
+    /** @var string */
+    public $commandApplyFile = '{crontab} {user} < {file} 2>&1';
+    /** @var string */
+    public $commandCurrentLines = '{crontab} {user} -l 2>&1';
+    /** @var string */
+    public $commandRemoveAll = '{crontab} {user} -r 2>&1';
 
     /**
      * @var CronJob[]|array[] list of [[CronJob]] instances or their array configurations.
@@ -168,7 +174,7 @@ class CronTab extends Component
      */
     public function getCurrentLines()
     {
-        $command = $this->composeBaseCommand() . ' -l 2>&1';
+        $command = $this->composeCommand($this->commandCurrentLines);
         $outputLines = [];
         exec($command, $outputLines, $exitCode);
 
@@ -180,7 +186,8 @@ class CronTab extends Component
             return [];
         }
 
-        return array_map('trim', $outputLines);
+        $outputLines = array_map('trim', $outputLines);
+        return array_filter($outputLines);
     }
 
     /**
@@ -195,7 +202,7 @@ class CronTab extends Component
         if (!file_exists($filename)) {
             throw new InvalidArgumentException("File '{$filename}' does not exist.");
         }
-        $command = $this->composeBaseCommand() . ' < ' . escapeshellarg($filename) . ' 2>&1';
+        $command = $this->composeCommand($this->commandApplyFile, ['file' => $filename]);
         exec($command, $outputLines, $exitCode);
         if ($exitCode !== 0) {
             throw new Exception("Failure to setup crontab from file '{$filename}': " . implode("\n", $outputLines));
@@ -280,7 +287,7 @@ class CronTab extends Component
      */
     public function removeAll()
     {
-        $command = $this->composeBaseCommand() . ' -r 2>&1';
+        $command = $this->composeCommand($this->commandRemoveAll);
         exec($command);
         return $this;
     }
@@ -321,14 +328,22 @@ class CronTab extends Component
 
     /**
      * Composes base (beginning part) 'crontab' shell command string.
+     * @param string $command template shell command line
+     * @param array $params
      * @return string base shell command string.
      * @since 1.0.3
      */
-    protected function composeBaseCommand()
+    protected function composeCommand($command, $params = [])
     {
-        $command = $this->binPath;
-        if ($this->username !== null) {
-            $command .= ' -u ' . escapeshellarg($this->username);
+        if (strpos($command, '{crontab}') !== false) {
+            $command = str_replace('{crontab}', $this->binPath, $command);
+        }
+        if (strpos($command, '{user}') !== false) {
+            $username = $this->username ? ' -u ' . escapeshellarg($this->username) : '';
+            $command = str_replace('{user}', $username, $command);
+        }
+        foreach ($params as $key => $value) {
+            $command = str_replace('{' . $key . '}', escapeshellarg($value), $command);
         }
         return $command;
     }

@@ -36,8 +36,7 @@ class CronTabTest extends TestCase
      */
     protected function getTestFilePath()
     {
-        $filePath = Yii::getAlias('@yii2tech/tests/unit/crontab/runtime') . DIRECTORY_SEPARATOR . getmypid();
-        return $filePath;
+        return Yii::getAlias('@yii2tech/tests/unit/crontab/runtime') . DIRECTORY_SEPARATOR . getmypid();
     }
 
     /**
@@ -46,8 +45,7 @@ class CronTabTest extends TestCase
      */
     protected function getCronTabBackupFileName()
     {
-        $filePath = $this->getTestFilePath() . DIRECTORY_SEPARATOR . '_crontab_backup.tmp';
-        return $filePath;
+        return $this->getTestFilePath() . DIRECTORY_SEPARATOR . '_crontab_backup.tmp';
     }
 
     /**
@@ -81,7 +79,7 @@ class CronTabTest extends TestCase
 
     public function testSetGet()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $jobs = [
             [
@@ -102,7 +100,7 @@ class CronTabTest extends TestCase
      */
     public function testGetLines()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $jobs = [
             [
@@ -127,7 +125,7 @@ class CronTabTest extends TestCase
      */
     public function testSaveToFile()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $jobs = [
             [
@@ -156,7 +154,7 @@ class CronTabTest extends TestCase
      */
     public function testApply()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $jobs = [
             [
@@ -183,7 +181,7 @@ class CronTabTest extends TestCase
      */
     public function testMerge()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $firstJob = [
             'min' => '0',
@@ -219,7 +217,7 @@ class CronTabTest extends TestCase
      */
     public function testMergeFilter()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $filterJob = [
             'min' => '0',
@@ -277,7 +275,7 @@ class CronTabTest extends TestCase
      */
     public function testApplyTwice()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
         $firstJob = [
             'min' => '0',
             'hour' => '0',
@@ -299,7 +297,7 @@ class CronTabTest extends TestCase
      */
     public function testRemoveAll()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $firstJob = [
             'min' => '0',
@@ -320,7 +318,7 @@ class CronTabTest extends TestCase
      */
     public function testRemove()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $firstJob = [
             'min' => '0',
@@ -350,7 +348,7 @@ class CronTabTest extends TestCase
      */
     public function testApplyFile()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $jobs = [
             [
@@ -368,7 +366,7 @@ class CronTabTest extends TestCase
 
         $cronTab->applyFile($filename);
 
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
         $currentLines = $cronTab->getCurrentLines();
         $cronTabContent = implode("\n", $currentLines);
         $this->assertContains($jobs[0]['command'], $cronTabContent);
@@ -380,10 +378,14 @@ class CronTabTest extends TestCase
      */
     public function testFailApplyFile()
     {
+        if ($this->getOs() === 'alpine') {
+            $this->markTestSkipped('This test does not work on alpine linux');
+        }
+
         $filename = $this->getTestFilePath() . DIRECTORY_SEPARATOR . 'testfile.tmp';
         file_put_contents($filename, '* 2 * * * * ls --help');
 
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $this->expectException('yii\base\Exception');
         $this->expectExceptionMessage('Failure to setup crontab from file');
@@ -397,7 +399,7 @@ class CronTabTest extends TestCase
      */
     public function testSaveEmptyLines()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $cronTab->setJobs([]);
 
@@ -414,7 +416,7 @@ class CronTabTest extends TestCase
      */
     public function testHeadLines()
     {
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
 
         $cronTab->headLines = [
             '#test head line',
@@ -453,7 +455,7 @@ CRONTAB;
             $this->markTestSkipped('This test can be run only by privileged user.');
         }
 
-        $cronTab = new CronTab();
+        $cronTab = $this->createCronTab();
         $cronTab->username = $username;
 
         $jobs = [
@@ -474,5 +476,30 @@ CRONTAB;
 
         $currentLines = $cronTab->getCurrentLines();
         $this->assertEmpty($currentLines, 'Unable to remove cron jobs for user!');
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getOs()
+    {
+        preg_match('~^ID=(\w+)~m', file_get_contents('/etc/os-release'), $match);
+        return isset($match[1]) ? $match[1] : null;
+    }
+
+    /**
+     * @return CronTab
+     */
+    protected function createCronTab()
+    {
+        $cronTab = new CronTab();
+        $os = $this->getOs();
+        if ($os === 'alpine') {
+            $cronTab->commandRemoveAll = 'echo | {crontab} {user} -';
+        }
+        if ($os === 'debian') {
+            $cronTab->commandApplyFile = '{crontab} {user} {file} 2>&1';
+        }
+        return $cronTab;
     }
 }
